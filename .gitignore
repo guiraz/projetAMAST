@@ -1,0 +1,6 @@
+bin/*
+APDescription.txt
+MTPs-Main-Container.txt
+.classpath
+.project
+.settings/*
