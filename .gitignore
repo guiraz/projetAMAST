@@ -4,3 +4,4 @@ MTPs-Main-Container.txt
 .classpath
 .project
 .settings/*
+.metadata/*
