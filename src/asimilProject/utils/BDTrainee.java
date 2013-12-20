@@ -1,4 +1,4 @@
-package asimilProject;
+package asimilProject.utils;
 
 import java.io.*;
 import java.util.*;
