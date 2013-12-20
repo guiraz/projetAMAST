@@ -1,5 +1,6 @@
 package asimilProject.pedagogique;
 
+import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -15,6 +16,9 @@ public class PedagogiqueBehaviour extends Behaviour
 	private boolean _end = false;
 	private int _nbError = 0;
 	private int _nbErrorG = 0;
+	private String _name_pedagogy = "pedagogie";
+	private String _mess;
+	private int _temps;
 	
     public void action()
     {
@@ -23,14 +27,13 @@ public class PedagogiqueBehaviour extends Behaviour
     	MessageTemplate m2 = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage msg = myAgent.receive(m1);
 		ACLMessage msg2 = myAgent.receive(m2);
-		String mess;
 		
 		if (msg != null)
 		{
-			mess = msg.getContent();
+			parseString(msg.getContent());
 			_nbError++;
 			
-			if(mess.equals("g"))
+			if(_mess.equals("g"))
 			{
 				_nbErrorG++;
 			}
@@ -40,18 +43,19 @@ public class PedagogiqueBehaviour extends Behaviour
 				//arret !!
 				//a voir comment faire
 				//+ possibilite de désactiver pour poursuivre la procedure
+				sendMessage("Arret !!!~" + _temps);
 			}
-			else if ((_nbErrorG == 3) || (mess.equals("pb2")))
+			else if ((_nbErrorG == 3) || (_mess.equals("pb2")))
 			{
-				System.out.println("msg3");
+				sendMessage("msg3~" + _temps);
 			}
-			else if ((mess.equals("m")) || (mess.equals("g")))
+			else if ((_mess.equals("m")) || (_mess.equals("g")))
 			{
-				System.out.println("msg1");
+				sendMessage("msg1~" + _temps);
 			}
-			else if (mess.equals("pb1"))
+			else if (_mess.equals("pb1"))
 			{
-				System.out.println("msg2");
+				sendMessage("msg2~" + _temps);
 			}
 
 		}
@@ -67,7 +71,21 @@ public class PedagogiqueBehaviour extends Behaviour
 		}
     }
     
-    
+    protected void parseString(String text)
+	{
+		String str[]= text.split("~");
+		
+		_mess = str[0];
+		_temps = Integer.parseInt(str[1]);	
+	}
+	
+    protected void sendMessage(String content)
+    {
+    	ACLMessage msg = new ACLMessage(ACLMessage.CFP);
+		msg.addReceiver(new AID(_name_pedagogy, AID.ISLOCALNAME));
+		msg.setContent(content);
+		myAgent.send(msg);
+    }
 	
     public boolean done()
     {

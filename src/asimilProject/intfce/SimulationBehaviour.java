@@ -26,7 +26,6 @@ public class SimulationBehaviour extends Behaviour {
 		
 		_papa.waitAndSend(mess, BDTrainee.getTimeElapsed(_iterator) - _timer);
 		_timer = BDTrainee.getTimeElapsed(_iterator);
-		System.out.println(_iterator);
 		_iterator++;
 	}
 

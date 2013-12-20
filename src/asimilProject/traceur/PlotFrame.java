@@ -19,14 +19,13 @@ public class PlotFrame {
 		
 		// create your PlotPanel (you can use it as a JPanel)
 		_plot = new Plot2DPanel();
-		
-		// define the legend position
-		_plot.addLegend("SOUTH");
  
 		// put the PlotPanel in a JFrame like a JPanel
 		_frame = new JFrame("Resultats");
-		_frame.setSize(600, 600);
+		_frame.setSize(700, 700);
 		_frame.setContentPane(_plot);
+		
+		_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		_frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -39,12 +38,19 @@ public class PlotFrame {
 	}
 
 	public void update() {
-		_plot.removeAllPlots();
+		try{
+			_plot.removeAllPlots();
+		}
+		catch(Exception e){}
+		
 		double[] x =  _papa.getX();
 		double[] y =  _papa.getY();
 		String name = "Résultats";
 		_plot.addStaircasePlot(name, x, y);
-		_plot.getPlot(0).setColor(Color.black);
 		_frame.setVisible(true);
+	}
+
+	public void close() {
+		_frame.dispose();
 	}
 }

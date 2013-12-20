@@ -21,6 +21,14 @@ public class Traceur extends Agent {
 	public double[] getY() {
 		return _y;
 	}
+	
+	public void setX(double[] x) {
+		_x = x;
+	}
+	
+	public void setY(double[] y) {
+		_y = y;
+	}
 
 	protected void setup() {
 		System.out.println("Traceur-agent "+getAID().getName()+" beginning.");
@@ -34,10 +42,13 @@ public class Traceur extends Agent {
 		_y[0]=0;
 		
 		_pf = new PlotFrame(this);
+		
+		addBehaviour(new ReceiveMessageTraceurBehaviour(this));
 	}
 	
 	protected void takeDown() {
         System.out.println("Traceur-agent "+getAID().getName()+" terminating.");
+        _pf.close();
     }
 
 	public void updatePlot() {
