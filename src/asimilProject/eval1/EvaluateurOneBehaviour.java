@@ -97,17 +97,9 @@ public class EvaluateurOneBehaviour extends Behaviour
     
     protected boolean errorMessage()
 	{
-		boolean result = true;
-		
-		String str[]= _errormessage_traineeaction.split("(action)");
-		
-		//si le message commence par "(action)" ce n'est pas un message d'erreur
-		if(str.length > 0)
-		{
-			result = false;
-		}
-		
-		return result;
+
+		return _errormessage_traineeaction.contains("(action)");
+
 	}
     
     protected void parseString(String text)
