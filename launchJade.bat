@@ -1,1 +1,1 @@
-java -cp lib\jade.jar;classes jade.Boot -gui
+java -cp lib\jade.jar;lib\jmathplot.jar;classes jade.Boot -gui -agents intfce:asimilProject/utils/Interface
