@@ -27,16 +27,26 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 					String[] currentStep = msg.getContent().split("~");
 					if(!currentStep[4].contains("(action)")) {
 						Double y, xp,yp;
-						y = _papa.getY()[ _papa.getY().length-1 ];
+						y = _papa.getY().get(_papa.getY().size()-1);
 						xp = Double.parseDouble(currentStep[3]) / 1000;
 						yp = y + Double.parseDouble(currentStep[5]);
-						addPoint(xp,yp);
+						_papa.getX().add(xp);
+						_papa.getY().add(yp);
+						
+						_papa.getActionIds().add(Integer.parseInt(currentStep[0]));
+						_papa.getActionGravities().add(Integer.parseInt(currentStep[5]));
+						_papa.getActionMsgs().add("");
 					}
 					else {
 						Double y,xp;
-						y = _papa.getY()[ _papa.getY().length-1 ];
+						y = _papa.getY().get(_papa.getY().size()-1);
 						xp = Double.parseDouble(currentStep[3]) / 1000;
-						addPoint(xp, y);
+						_papa.getX().add(xp);
+						_papa.getY().add(y);
+						
+						_papa.getActionIds().add(Integer.parseInt(currentStep[0]));
+						_papa.getActionGravities().add(-1);
+						_papa.getActionMsgs().add(null);
 					}
 					_papa.updatePlot();
 				}
@@ -44,10 +54,16 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 			}
 			
 			if(msg.getSender().getLocalName().equals("pedagogique")) {
-				String[] content = msg.getContent().split("~");
-				String mess = content[0];
-				Double tps = Double.parseDouble(content[1]) / 1000;
-				//rechercher de y grace à x
+				
+				if(msg.getPerformative() == ACLMessage.CFP){
+					String[] content = msg.getContent().split("~");
+					Integer id = Integer.parseInt(content[0]);
+					String tempMsg = content[1];
+					
+					Integer index = _papa.getActionIds().indexOf(id);
+					_papa.getActionMsgs().set(index, tempMsg);
+				}
+				
 			}
 			
 		}
@@ -56,31 +72,11 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 		}
 	}
 
-	private void addPoint(Double x, Double y) {
-		double[] xList = new double[_papa.getX().length+1];
-		double[] yList = new double[_papa.getY().length+1];
-		
-		for(int i=0; i<_papa.getX().length; i++) {
-			xList[i] = _papa.getX()[i];
-			yList[i] = _papa.getY()[i];
-		}
-		
-		xList[xList.length-1] = x;
-		yList[yList.length-1] = y;
-		
-		_papa.setX(xList);
-		_papa.setY(yList);
-	}
-
 	@Override
 	public boolean done() {
 		if(_stop)
-		{
 			_papa.doDelete();
-			return true;
-		}
-		else
-			return false;
+		return _stop;
 	}
 
 }

@@ -1,12 +1,12 @@
 package asimilProject.pedagogique;
 
-import asimilProject.eval2.EvaluateurTwoBehaviour;
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 public class Pedagogique extends Agent 
 {
+	private static final long serialVersionUID = 1L;
+
 	protected void setup() {
 		System.out.println("Pedagogique-agent "+getAID().getName()+" beginning.");
 		

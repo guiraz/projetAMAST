@@ -1,8 +1,6 @@
 package asimilProject.eval1;
 
-import asimilProject.eval2.EvaluateurTwo;
 import asimilProject.utils.OneMessageBehaviour;
-import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -17,11 +15,7 @@ public class EvaluateurOneBehaviour extends Behaviour
 	private EvaluateurOne _papa;
 	
 	private int _id_traineeaction;
-	private int _id_pedagogy;
-	private int _id_action;
-	private int _timeelapsed_traineeaction;
 	private String _errormessage_traineeaction;
-	private int _gravity_traineeaction;
 	private boolean _end = false;
 	private int _nbError = 0;
 	private String _name_pedagogy = "pedagogique";
@@ -59,7 +53,7 @@ public class EvaluateurOneBehaviour extends Behaviour
 					sendMessage(_id_traineeaction + "~"  + "pb2");
 				}
 				else {
-					sendMessage(_id_traineeaction + "~"  + "");
+					sendMessage(_id_traineeaction + "~"  + " ");
 				}
 			}
 			//si le message n'est pas une erreur
@@ -83,6 +77,8 @@ public class EvaluateurOneBehaviour extends Behaviour
     	
     public boolean done()
     {
+    	if(_end)
+    		_papa.doDelete();
     	return _end;
     }
     
@@ -104,11 +100,7 @@ public class EvaluateurOneBehaviour extends Behaviour
 		String str[]= text.split("~");
 		
 		_id_traineeaction = Integer.parseInt(str[0]);
-		_id_pedagogy = Integer.parseInt(str[1]);
-		_id_action = Integer.parseInt(str[2]);
-		_timeelapsed_traineeaction = Integer.parseInt(str[3]);
-		_errormessage_traineeaction = str[4];
-		_gravity_traineeaction = Integer.parseInt(str[5]);		
+		_errormessage_traineeaction = str[4];		
 	}
 }
 

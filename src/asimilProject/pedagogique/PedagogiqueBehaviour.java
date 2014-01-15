@@ -5,7 +5,6 @@ import java.util.List;
 
 import asimilProject.utils.OneMessageBehaviour;
 
-import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -22,6 +21,8 @@ public class PedagogiqueBehaviour extends Behaviour
 	private List<Integer> _actionIds;
 	private List<String> _actionMsg;
 	private List<String> _actionGravity;
+	private List<Boolean> _msgReceived;
+	private List<Boolean> _gravityReceived;
 
 	private boolean _alreadyStop = false;
 	private boolean _end = false;
@@ -35,6 +36,8 @@ public class PedagogiqueBehaviour extends Behaviour
 		_actionIds = new ArrayList<Integer>();
 		_actionMsg = new ArrayList<String>();
 		_actionGravity = new ArrayList<String>();
+		_msgReceived = new ArrayList<Boolean>();
+		_gravityReceived = new ArrayList<Boolean>();
 	}
 	
     public void action()
@@ -50,7 +53,7 @@ public class PedagogiqueBehaviour extends Behaviour
 			Integer index = parseString(msg.getContent());
 			_nbError++;
 			
-			if(_actionGravity.size() > index && _actionMsg.size() > index) {
+			if(_gravityReceived.get(index) && _msgReceived.get(index)) {
 				String tempMsg = _actionMsg.get(index);
 				String tempGravity = _actionGravity.get(index);
 				
@@ -92,19 +95,29 @@ public class PedagogiqueBehaviour extends Behaviour
 		Integer tempId = Integer.parseInt(str[0]);
 		String tempMsg = str[1];
 		
+		Integer index = _actionIds.indexOf(tempId);
+		
 		if(tempMsg.equals("b") || tempMsg.equals("m") || tempMsg.equals("g")){
-			if(_actionIds.contains(tempId)) {
-				_actionGravity.add(tempMsg);
+			if(index != -1) {
+				_actionGravity.set(index, tempMsg);
+				_gravityReceived.set(index, true);
 			}else{
 				_actionIds.add(tempId);
 				_actionGravity.add(tempMsg);
+				_actionMsg.add(null);
+				_gravityReceived.add(true);
+				_msgReceived.add(false);
 			}
 		}else {
-			if(_actionIds.contains(tempId)) {
-				_actionMsg.add(tempMsg);
+			if(index != -1) {
+				_actionMsg.set(index, tempMsg);
+				_msgReceived.set(index, true);
 			}else{
 				_actionIds.add(tempId);
 				_actionMsg.add(tempMsg);
+				_actionGravity.add(null);
+				_msgReceived.add(true);
+				_gravityReceived.add(false);
 			}
 		}
 		
@@ -124,6 +137,8 @@ public class PedagogiqueBehaviour extends Behaviour
 	
     public boolean done()
     {
+    	if(_end)
+    		_papa.doDelete();
     	return _end;
     }
 }

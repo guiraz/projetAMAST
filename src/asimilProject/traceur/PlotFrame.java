@@ -1,9 +1,6 @@
 package asimilProject.traceur;
 
-import java.awt.Color;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.*;
 import org.math.plot.*;
@@ -37,14 +34,15 @@ public class PlotFrame {
 		update();
 	}
 
-	public void update() {
+	synchronized public void update() {
 		try{
 			_plot.removeAllPlots();
 		}
 		catch(Exception e){}
 		
-		double[] x =  _papa.getX();
-		double[] y =  _papa.getY();
+		double[] x = _papa.listDoubleToArrayDouble(_papa.getX());
+		double[] y = _papa.listDoubleToArrayDouble(_papa.getY());
+		
 		String name = "Résultats";
 		_plot.addStaircasePlot(name, x, y);
 		_frame.setVisible(true);
