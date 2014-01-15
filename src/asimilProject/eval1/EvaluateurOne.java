@@ -18,7 +18,7 @@ public class EvaluateurOne extends Agent {
 		addBehaviour(new asimilProject.utils.OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
 				
 		//Traitement des messages recus
-		addBehaviour(new EvaluateurOneBehaviour());		
+		addBehaviour(new EvaluateurOneBehaviour(this));		
 	}
 	
 	protected void takeDown() {

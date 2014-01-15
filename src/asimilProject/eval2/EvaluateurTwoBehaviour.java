@@ -1,5 +1,6 @@
 package asimilProject.eval2;
 
+import asimilProject.utils.OneMessageBehaviour;
 import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -12,6 +13,8 @@ public class EvaluateurTwoBehaviour extends Behaviour
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private EvaluateurTwo _papa;
+	
 	private int _id_traineeaction;
 	private int _id_pedagogy;
 	private int _id_action;
@@ -20,6 +23,10 @@ public class EvaluateurTwoBehaviour extends Behaviour
 	private int _gravity_traineeaction;
 	private boolean _end = false;
 	private String _name_pedagogy = "pedagogique";
+	
+	public EvaluateurTwoBehaviour(EvaluateurTwo papa) {
+		_papa = papa;
+	}
 	
     public void action()
     {
@@ -40,15 +47,15 @@ public class EvaluateurTwoBehaviour extends Behaviour
 				//si c'est un message d'erreur on le traite
 				if(_gravity_traineeaction <= 1)
 				{
-					sendMessage("b");
+					sendMessage(_id_traineeaction + "~"  + "b");
 				}
 				else if (_gravity_traineeaction <= 6)
 				{
-					sendMessage("m");
+					sendMessage(_id_traineeaction + "~"  + "m");
 				}
 				else
 				{
-					sendMessage("g");
+					sendMessage(_id_traineeaction + "~" + "g");
 				}
 			}
 
@@ -67,10 +74,8 @@ public class EvaluateurTwoBehaviour extends Behaviour
     
     protected void sendMessage(String content)
     {
-    	ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-		msg.addReceiver(new AID(_name_pedagogy, AID.ISLOCALNAME));
-		msg.setContent(content);
-		myAgent.send(msg);
+    	String[] receiver = {_name_pedagogy};
+    	_papa.addBehaviour(new OneMessageBehaviour(_papa, receiver, ACLMessage.CFP, content));
     }
     
 	protected void parseString(String text)
@@ -87,17 +92,7 @@ public class EvaluateurTwoBehaviour extends Behaviour
 	
 	protected boolean errorMessage()
 	{
-		boolean result = true;
-		
-		String str[]= _errormessage_traineeaction.split("(action)");
-		
-		//si le message commence par "(action)" ce n'est pas un message d'erreur
-		if(str.length > 0)
-		{
-			result = false;
-		}
-		
-		return result;
+		return !_errormessage_traineeaction.contains("(action)");
 	}
 	
     public boolean done()

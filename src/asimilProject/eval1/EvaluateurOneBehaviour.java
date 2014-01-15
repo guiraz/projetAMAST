@@ -1,5 +1,7 @@
 package asimilProject.eval1;
 
+import asimilProject.eval2.EvaluateurTwo;
+import asimilProject.utils.OneMessageBehaviour;
 import jade.core.AID;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -12,6 +14,8 @@ public class EvaluateurOneBehaviour extends Behaviour
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	private EvaluateurOne _papa;
+	
 	private int _id_traineeaction;
 	private int _id_pedagogy;
 	private int _id_action;
@@ -20,8 +24,11 @@ public class EvaluateurOneBehaviour extends Behaviour
 	private int _gravity_traineeaction;
 	private boolean _end = false;
 	private int _nbError = 0;
-	private boolean _twoError = false;
 	private String _name_pedagogy = "pedagogique";
+	
+	public EvaluateurOneBehaviour(EvaluateurOne papa) {
+		_papa = papa;
+	}
 	
     public void action()
     {
@@ -39,34 +46,26 @@ public class EvaluateurOneBehaviour extends Behaviour
 			//on teste si le message est un message d'erreur
 			if(errorMessage())
 			{
+				//imcremente le nb d'erreurs
 				_nbError++;
-				
+				//si deux erreurs d'affilées
 				if (_nbError == 2)
 				{
-					_twoError = true;	
+					sendMessage(_id_traineeaction + "~"  + "pb1");
 				}
-				else if (_nbError == 3)
+				//si trois erreurs d'affilées
+				else if (_nbError >= 3)
 				{
-					//on signale le probleme
-					sendMessage("pb2");
-					
-					//on remet les compteurs à zero
-					_twoError = false;
-					_nbError = 0;
+					sendMessage(_id_traineeaction + "~"  + "pb2");
+				}
+				else {
+					sendMessage(_id_traineeaction + "~"  + "");
 				}
 			}
+			//si le message n'est pas une erreur
 			else
 			{
 				_nbError = 0;
-				
-				if (_twoError == true)
-				{
-					//on signale le probleme
-					sendMessage("pb1");
-					
-					//on remet le compteur à zero
-					_twoError = false;
-				}
 			}
 			
 		}
@@ -89,16 +88,14 @@ public class EvaluateurOneBehaviour extends Behaviour
     
     protected void sendMessage(String content)
     {
-    	ACLMessage msg = new ACLMessage(ACLMessage.CFP);
-		msg.addReceiver(new AID(_name_pedagogy, AID.ISLOCALNAME));
-		msg.setContent(content);
-		myAgent.send(msg);
+    	String[] receiver = {_name_pedagogy};
+    	_papa.addBehaviour(new OneMessageBehaviour(_papa, receiver, ACLMessage.CFP, content));
     }
     
     protected boolean errorMessage()
 	{
 
-		return _errormessage_traineeaction.contains("(action)");
+		return !_errormessage_traineeaction.contains("(action)");
 
 	}
     

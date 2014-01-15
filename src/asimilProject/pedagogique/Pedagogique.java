@@ -14,7 +14,7 @@ public class Pedagogique extends Agent
 		addBehaviour(new asimilProject.utils.OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
 		
 		//traitement des erreurs
-		addBehaviour(new PedagogiqueBehaviour());
+		addBehaviour(new PedagogiqueBehaviour(this));
 	}
 	
 	protected void takeDown() {
