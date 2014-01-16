@@ -1,5 +1,6 @@
 package asimilProject.eval2;
 
+import asimilProject.utils.KillBehaviour;
 import asimilProject.utils.OneMessageBehaviour;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
@@ -91,7 +92,7 @@ public class EvaluateurTwoBehaviour extends Behaviour
     public boolean done()
     {
     	if(_end)
-    		_papa.doDelete();
+    		_papa.addBehaviour(new KillBehaviour(_papa));
     	return _end;
     }
 }

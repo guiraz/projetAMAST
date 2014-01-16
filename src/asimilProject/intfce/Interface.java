@@ -77,7 +77,6 @@ public class Interface extends Agent {
 	
 	protected void takeDown() {
         System.out.println("Interface-agent "+getAID().getName()+" terminating.");
-        super.takeDown();
     }
 	
 	public void startSimulation() {
@@ -89,7 +88,7 @@ public class Interface extends Agent {
 		String[] receiver = new String[] {"eval1","eval2","pedagogique","traceur"};
 		addBehaviour(new OneMessageBehaviour(this, receiver, ACLMessage.INFORM, ""));
 		JOptionPane.showMessageDialog(null, "Simulation terminer, cliquez pour quitter!", "Simulation terminée", JOptionPane.QUESTION_MESSAGE);
-		takeDown();
+		addBehaviour(new KillBehaviour(this));
 	}
 
 	public void waitAndSend(String mess, int timer) {

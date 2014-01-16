@@ -3,6 +3,7 @@ package asimilProject.pedagogique;
 import java.util.ArrayList;
 import java.util.List;
 
+import asimilProject.utils.KillBehaviour;
 import asimilProject.utils.OneMessageBehaviour;
 
 import jade.core.behaviours.*;
@@ -138,7 +139,7 @@ public class PedagogiqueBehaviour extends Behaviour
     public boolean done()
     {
     	if(_end)
-    		_papa.doDelete();
+    		_papa.addBehaviour(new KillBehaviour(_papa));
     	return _end;
     }
 }

@@ -1,5 +1,6 @@
 package asimilProject.traceur;
 
+import asimilProject.utils.KillBehaviour;
 import jade.core.behaviours.Behaviour;
 import jade.lang.acl.ACLMessage;
 
@@ -75,7 +76,7 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 	@Override
 	public boolean done() {
 		if(_stop)
-			_papa.doDelete();
+			_papa.addBehaviour(new KillBehaviour(_papa));
 		return _stop;
 	}
 
