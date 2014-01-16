@@ -1,6 +1,8 @@
 package asimilProject.traceur;
 
+import java.awt.Color;
 import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.*;
 import org.math.plot.*;
@@ -45,6 +47,23 @@ public class PlotFrame {
 		
 		String name = "Résultats";
 		_plot.addStaircasePlot(name, x, y);
+		_plot.getAxis(0).setLabelText("Temps");
+		_plot.getAxis(1).setLabelText("Erreur");
+		
+		List<String> messages = _papa.getActionMsgs();
+		List<Integer> gravities = _papa.getActionGravities();
+		
+		for(int i=0; i<messages.size(); i++) {
+			if(messages.get(i) != null){
+				if(gravities.get(i) <= 1)
+					_plot.addLabel(messages.get(i), Color.GRAY, x[i], y[i]);
+				else if(gravities.get(i) <= 6)
+					_plot.addLabel(messages.get(i), Color.YELLOW, x[i], y[i]);
+				else if(gravities.get(i) <= 10)
+					_plot.addLabel(messages.get(i), Color.RED, x[i], y[i]);
+			}
+		}
+		
 		_frame.setVisible(true);
 	}
 

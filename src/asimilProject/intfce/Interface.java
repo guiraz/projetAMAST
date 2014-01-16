@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import asimilProject.utils.*;
 import jade.core.Agent;
-import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.lang.acl.ACLMessage;
 import jade.wrapper.AgentController;
 import jade.wrapper.AgentContainer;
@@ -17,8 +16,6 @@ public class Interface extends Agent {
 	private final String _eval2Name = "eval2";
 	private final String _pedagogiqueName = "pedagogique";
 	private final String _traceurName = "traceur";
-	
-	private ThreadedBehaviourFactory _tbf;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -73,8 +70,6 @@ public class Interface extends Agent {
             traceur.start();
         }
         catch (Exception e){}
-        
-        _tbf = new ThreadedBehaviourFactory();
 
     	addBehaviour(new WakeUpWaitBehaviour(this));
 		
@@ -82,6 +77,7 @@ public class Interface extends Agent {
 	
 	protected void takeDown() {
         System.out.println("Interface-agent "+getAID().getName()+" terminating.");
+        super.takeDown();
     }
 	
 	public void startSimulation() {
@@ -91,10 +87,9 @@ public class Interface extends Agent {
 
 	public void finish() {
 		String[] receiver = new String[] {"eval1","eval2","pedagogique","traceur"};
-		addBehaviour(_tbf.wrap(new OneMessageBehaviour(this, receiver, ACLMessage.INFORM, "")));
+		addBehaviour(new OneMessageBehaviour(this, receiver, ACLMessage.INFORM, ""));
 		JOptionPane.showMessageDialog(null, "Simulation terminer, cliquez pour quitter!", "Simulation terminée", JOptionPane.QUESTION_MESSAGE);
-		doWait(1000);
-		doDelete();
+		takeDown();
 	}
 
 	public void waitAndSend(String mess, int timer) {
