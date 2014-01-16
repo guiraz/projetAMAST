@@ -92,7 +92,7 @@ public class Interface extends Agent {
 	}
 
 	public void waitAndSend(String mess, int timer) {
-		doWait(timer/10);
+		doWait(timer);
 		String[] receiver = new String[] {"eval1","eval2", "traceur"};
 		addBehaviour(new OneMessageBehaviour(this, receiver, ACLMessage.CFP, mess));
 	}
