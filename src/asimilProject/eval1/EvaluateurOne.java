@@ -2,6 +2,7 @@ package asimilProject.eval1;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import asimilProject.utils.*;
 
 public class EvaluateurOne extends Agent {
 
@@ -13,11 +14,10 @@ public class EvaluateurOne extends Agent {
 	protected void setup() {
 		System.out.println("Eval1-agent "+getAID().getName()+" beginning.");
 		
-
-		//envoi un message a l'interface pour lui signifier que l'agent est bien réveillé
-		addBehaviour(new asimilProject.utils.OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
+		//send a wake up message to interface agent
+		addBehaviour(new OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
 				
-		//Traitement des messages recus
+		//message receival behaviour
 		addBehaviour(new EvaluateurOneBehaviour(this));		
 	}
 	

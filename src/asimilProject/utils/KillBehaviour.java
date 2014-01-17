@@ -3,6 +3,7 @@ package asimilProject.utils;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 
+//kill the parent agent
 public class KillBehaviour extends OneShotBehaviour {
 	
 	private Agent _papa;

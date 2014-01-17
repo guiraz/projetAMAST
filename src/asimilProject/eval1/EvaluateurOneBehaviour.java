@@ -1,7 +1,6 @@
 package asimilProject.eval1;
 
-import asimilProject.utils.KillBehaviour;
-import asimilProject.utils.OneMessageBehaviour;
+import asimilProject.utils.*;
 import jade.core.behaviours.*;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -13,12 +12,18 @@ public class EvaluateurOneBehaviour extends Behaviour
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	//parent agent
 	private EvaluateurOne _papa;
 	
+	//action's id
 	private int _id_traineeaction;
+	//action's message
 	private String _errormessage_traineeaction;
+	//variable setting the end of the behaviour
 	private boolean _end = false;
+	//error counter
 	private int _nbError = 0;
+	//localname of the pedagogique agent
 	private String _name_pedagogy = "pedagogique";
 	
 	public EvaluateurOneBehaviour(EvaluateurOne papa) {
@@ -27,55 +32,61 @@ public class EvaluateurOneBehaviour extends Behaviour
 	
     public void action()
     {
-    	//on recupere les messages de type CFP
+    	//receiving messages
     	MessageTemplate m1 = MessageTemplate.MatchPerformative(ACLMessage.CFP);
     	MessageTemplate m2 = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 		ACLMessage msg = myAgent.receive(m1);
 		ACLMessage msg2 = myAgent.receive(m2);
 		
+		//if we receive a CFP message
 		if (msg != null)
 		{
-			//on a bien un message on le traite
+			//we parse it
 			parseString(msg.getContent());
 			
-			//on teste si le message est un message d'erreur
+			//if the action is an error
 			if(errorMessage())
 			{
-				//imcremente le nb d'erreurs
+				//imcrements the error counter
 				_nbError++;
-				//si deux erreurs d'affilées
+				//if two mistakes in a row we send the action's id and "pb1"
 				if (_nbError == 2)
 				{
 					sendMessage(_id_traineeaction + "~"  + "pb1");
 				}
-				//si trois erreurs d'affilées
+				//if three mistakes in a row we send the action's id and "pb2"
 				else if (_nbError >= 3)
 				{
 					sendMessage(_id_traineeaction + "~"  + "pb2");
 				}
+				//else we send action's id and " "
+				//because pedagogique waits for a message for every mistake
 				else {
 					sendMessage(_id_traineeaction + "~"  + " ");
 				}
 			}
-			//si le message n'est pas une erreur
+			//if it's not
 			else
 			{
 				_nbError = 0;
 			}
 			
 		}
+		//if we receive a INFORM message
 		else if (msg2 != null)
 		{
-			//fin de la simulation
+			//end of the simulation
 			_end = true;
 		}
+		//if no message
 		else
 		{
-			// on se bloque tant que l'on a pas de message
+			//we block and wait for a message
 			block();
 		}
     }
-    	
+    
+    //end of behaviour un killing the parent agent
     public boolean done()
     {
     	if(_end)
@@ -83,19 +94,20 @@ public class EvaluateurOneBehaviour extends Behaviour
     	return _end;
     }
     
+    //send a message to pedagogique agent
     protected void sendMessage(String content)
     {
     	String[] receiver = {_name_pedagogy};
     	_papa.addBehaviour(new OneMessageBehaviour(_papa, receiver, ACLMessage.CFP, content));
     }
     
+    //verifying if the action is an error or not
     protected boolean errorMessage()
 	{
-
 		return !_errormessage_traineeaction.contains("(action)");
-
 	}
     
+    //parsing the message and getting the usefull informations
     protected void parseString(String text)
 	{
 		String str[]= text.split("~");

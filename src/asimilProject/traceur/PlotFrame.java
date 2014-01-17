@@ -9,8 +9,11 @@ import org.math.plot.*;
 
 public class PlotFrame {
 	
+	//parent agent
 	private Traceur _papa;
+	//the frame window
 	private JFrame _frame;
+	//the plot
 	private Plot2DPanel _plot;
 	
 	public PlotFrame(Traceur papa) {
@@ -29,7 +32,7 @@ public class PlotFrame {
 		_frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                _papa.takeDown();
+                _papa.doDelete();
             }
         });
 		
@@ -37,11 +40,13 @@ public class PlotFrame {
 	}
 
 	synchronized public void update() {
+		//we remove the plot
 		try{
 			_plot.removeAllPlots();
 		}
 		catch(Exception e){}
 		
+		//redraw it
 		double[] x = _papa.listDoubleToArrayDouble(_papa.getX());
 		double[] y = _papa.listDoubleToArrayDouble(_papa.getY());
 		
@@ -50,9 +55,12 @@ public class PlotFrame {
 		_plot.getAxis(0).setLabelText("Temps");
 		_plot.getAxis(1).setLabelText("Erreur");
 		
+		//get the informations for the labels
 		List<String> messages = _papa.getActionMsgs();
 		List<Integer> gravities = _papa.getActionGravities();
 		
+		//for each error action
+		//add a label with the color depending on the gravity
 		for(int i=0; i<messages.size(); i++) {
 			if(messages.get(i) != null){
 				if(gravities.get(i) <= 1)
@@ -64,9 +72,11 @@ public class PlotFrame {
 			}
 		}
 		
+		//draw
 		_frame.setVisible(true);
 	}
 
+	//close
 	public void close() {
 		_frame.dispose();
 	}

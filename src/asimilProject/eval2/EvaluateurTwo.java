@@ -2,21 +2,19 @@ package asimilProject.eval2;
 
 import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
+import asimilProject.utils.*;
 
 public class EvaluateurTwo extends Agent 
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected void setup() {
 		System.out.println("Eval2-agent "+getAID().getName()+" beginning.");
 		
-		//envoi un message a l'interface pour lui signifier que l'agent est bien réveillé
-		addBehaviour(new asimilProject.utils.OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
+		//send a wake up message to interface agent
+		addBehaviour(new OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
 		
-		//Traitement des messages recus
+		//message receival behaviour
 		addBehaviour(new EvaluateurTwoBehaviour(this));		
 	}
 	

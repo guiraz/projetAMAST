@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class BDTrainee {
+	//arrays of all the informations of the actions of the exercice
 	private static List<Integer> _id_traineeaction;
 	private static List<Integer> _id_pedagogy;
 	private static List<Integer> _id_action;
@@ -11,10 +12,12 @@ public class BDTrainee {
 	private static List<String> _errormessage_traineeaction;
 	private static List<Integer> _gravity_traineeaction;
 	
+	//return the count of the actions
 	public static int getCount() {
 		return _id_traineeaction.size();
 	}
 	
+	//init
 	public static void create() {
 		_id_traineeaction = new ArrayList<Integer>();
 		_id_pedagogy = new ArrayList<Integer>();
@@ -31,6 +34,7 @@ public class BDTrainee {
 	public static Integer getIdPedagogy(int i) {
 		return _id_pedagogy.get(i);
 	}
+	
 	
 	public static Integer getIdAction(int i) {
 		return _id_action.get(i);
@@ -72,6 +76,7 @@ public class BDTrainee {
 		_gravity_traineeaction.add(i);
 	}
 	
+	//export exercice to file (useless for the case)
 	public static void exportDB(String s) {
 		try {
 			File f = new File(s+".txt");
@@ -94,6 +99,7 @@ public class BDTrainee {
 		}
 	}
 	
+	//import exercice from file
 	public static void importDB(String s) {
 		try{
 			InputStream ips=new FileInputStream(s+".txt"); 

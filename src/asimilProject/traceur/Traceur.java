@@ -9,8 +9,11 @@ import jade.lang.acl.ACLMessage;
 public class Traceur extends Agent {
 
 	private static final long serialVersionUID = 1L;
+	
+	//gui that draws the plot
 	private PlotFrame _pf;
 	
+	//informations and coordonates of the action
 	private List<Double> _x;
 	private List<Double> _y;
 	private List<String> _actionMsg;
@@ -40,9 +43,11 @@ public class Traceur extends Agent {
 	protected void setup() {
 		System.out.println("Traceur-agent "+getAID().getName()+" beginning.");
 		
-		//send message to say agent is awake
+		//send a wake up message to interface agent
 		addBehaviour(new asimilProject.utils.OneMessageBehaviour(this, new String[] {"intfce"}, ACLMessage.CFP, ""));
 		
+		//init arrays with a fake action
+		//to make the plot start at (0,0)
 		_x = new ArrayList<Double>();
 		_x.add(0.);
 		_y = new ArrayList<Double>();
@@ -54,8 +59,10 @@ public class Traceur extends Agent {
 		_actionIds = new ArrayList<Integer>();
 		_actionIds.add(0);
 		
+		//launch the gui
 		_pf = new PlotFrame(this);
 		
+		//launch the message receival behavior
 		addBehaviour(new ReceiveMessageTraceurBehaviour(this));
 	}
 	
@@ -64,10 +71,12 @@ public class Traceur extends Agent {
         _pf.close();
     }
 
+	//call the method of the gui which redraws the plot
 	public void updatePlot() {
 		_pf.update();
 	}
 	
+	//convert List of doubles to arrays of doubles
 	public double[] listDoubleToArrayDouble(List<Double> list) {
 		double[] array = new double[list.size()];
 		

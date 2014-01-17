@@ -8,7 +8,9 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 
 	private static final long serialVersionUID = 1L;
 	
+	//parent agent
 	private Traceur _papa;
+	//variable setting the end of the behaviour
 	private boolean _stop = false;
 	
 	public ReceiveMessageTraceurBehaviour(Traceur papa) {
@@ -17,15 +19,22 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 
 	@Override
 	public void action() {
+		//receiving messages
 		ACLMessage msg = _papa.receive();
 		
 		if(msg != null) {
+			//if INFORM message from interface
+			//stop behaviour and kill parent agent
 			if(msg.getSender().getLocalName().equals("intfce")) {
 				if(msg.getPerformative() == ACLMessage.INFORM)
 					_stop = true;
 				
+				//if CFP message from interface
 				if(msg.getPerformative() == ACLMessage.CFP) {
+					//parse it
 					String[] currentStep = msg.getContent().split("~");
+					//if mistake calculate the coordonates (x and y) of the next point
+					//get informations from the message
 					if(!currentStep[4].contains("(action)")) {
 						Double y, xp,yp;
 						y = _papa.getY().get(_papa.getY().size()-1);
@@ -38,6 +47,8 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 						_papa.getActionGravities().add(Integer.parseInt(currentStep[5]));
 						_papa.getActionMsgs().add("");
 					}
+					//if not mistake calculate the coordonates (only x) of the next point
+					//get informations from the message
 					else {
 						Double y,xp;
 						y = _papa.getY().get(_papa.getY().size()-1);
@@ -49,11 +60,14 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 						_papa.getActionGravities().add(-1);
 						_papa.getActionMsgs().add(null);
 					}
+					//update the plot
 					_papa.updatePlot();
 				}
 				
 			}
 			
+			//if CFP message from pedagogique
+			//fill the arrays with the informations
 			if(msg.getSender().getLocalName().equals("pedagogique")) {
 				
 				if(msg.getPerformative() == ACLMessage.CFP){
@@ -68,11 +82,13 @@ public class ReceiveMessageTraceurBehaviour extends Behaviour {
 			}
 			
 		}
+		//if no message block and wait
 		else {
 			block();
 		}
 	}
 
+	//stop behavior, kill parent agent
 	@Override
 	public boolean done() {
 		if(_stop)
